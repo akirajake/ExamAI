@@ -4,97 +4,30 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>ExamAI Scheduler</title>
-    <!-- Tailwind CSS (CDN for simplicity, though PostCSS is recommended for production) -->
+
+    <!-- Tailwind -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-      tailwind.config = {
-        darkMode: 'class',
-        theme: {
-          extend: {
-            colors: {
-              background: '#0f172a', // Slate 950
-              surface: '#1e293b',    // Slate 800
-              primary: '#3b82f6',    // Blue 500
-              secondary: '#6366f1',  // Indigo 500
-              accent: '#f43f5e',     // Rose 500
-            },
-            fontFamily: {
-              sans: ['Inter', 'sans-serif'],
-            },
-          },
-        },
-      }
-    </script>
+
     <!-- React Big Calendar CSS -->
     <link href="https://cdn.jsdelivr.net/npm/react-big-calendar@1.8.5/lib/css/react-big-calendar.css" rel="stylesheet" />
+
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    
-    <!-- PDF.js Global Worker -->
+
+    <!-- PDF.js -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
     <script>
-      // Initialize PDF worker
-      pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+      pdfjsLib.GlobalWorkerOptions.workerSrc =
+        'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
     </script>
 
-    <style>
-      body {
-        font-family: 'Inter', sans-serif;
-        background-color: #0f172a;
-        color: #f8fafc;
-      }
-      /* Custom Scrollbar */
-      ::-webkit-scrollbar {
-        width: 8px;
-        height: 8px;
-      }
-      ::-webkit-scrollbar-track {
-        background: #1e293b; 
-      }
-      ::-webkit-scrollbar-thumb {
-        background: #475569; 
-        border-radius: 4px;
-      }
-      ::-webkit-scrollbar-thumb:hover {
-        background: #64748b; 
-      }
-      
-      /* Calendar Overrides for Dark Mode */
-      .rbc-calendar { color: #cbd5e1; }
-      .rbc-off-range-bg { background: #0f172a; }
-      .rbc-month-view, .rbc-time-view, .rbc-agenda-view { background: rgba(30, 41, 59, 0.5); border: 1px solid #334155; backdrop-filter: blur(10px); border-radius: 0.5rem; }
-      .rbc-header { border-bottom: 1px solid #334155; padding: 10px; font-weight: 600; }
-      .rbc-day-bg + .rbc-day-bg { border-left: 1px solid #334155; }
-      .rbc-month-row + .rbc-month-row { border-top: 1px solid #334155; }
-      .rbc-today { background-color: rgba(59, 130, 246, 0.1); }
-      .rbc-toolbar button { color: #e2e8f0; border: 1px solid #475569; }
-      .rbc-toolbar button:active, .rbc-toolbar button.rbc-active { background-color: #3b82f6; border-color: #3b82f6; color: white; }
-      .rbc-toolbar button:hover { background-color: #334155; }
-      .rbc-event { background-color: #3b82f6; border-radius: 4px; }
-    </style>
+    <!-- ★ Vite build JS（相対パス） -->
+    <script type="module" crossorigin src="./assets/index-B4GJeJW_.js"></script>
+  </head>
 
-<link rel="stylesheet" href="/index.css">
-  <script type="importmap">
-{
-  "imports": {
-    "react": "https://esm.sh/react@^19.2.3",
-    "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
-    "react/": "https://esm.sh/react@^19.2.3/",
-    "lucide-react": "https://esm.sh/lucide-react@^0.562.0",
-    "@google/genai": "https://esm.sh/@google/genai@^1.35.0",
-    "react-big-calendar": "https://esm.sh/react-big-calendar@^1.19.4",
-    "date-fns/": "https://esm.sh/date-fns@^4.1.0/",
-    "date-fns": "https://esm.sh/date-fns@^4.1.0",
-    "@vitejs/plugin-react": "https://esm.sh/@vitejs/plugin-react@^5.1.2",
-    "vite": "https://esm.sh/vite@^7.3.1"
-  }
-}
-</script>
-  <script type="module" crossorigin src="./assets/index-B4GJeJW_.js"></script>
-</head>
   <body>
     <div id="root"></div>
-</body>
+  </body>
 </html>
