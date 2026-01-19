@@ -28,23 +28,18 @@
       }
     </script>
 
-    <!-- APIキー管理スクリプト (ここを追加しました) -->
+    <!-- ★★★ 追加: APIキー管理スクリプト ★★★ -->
     <script>
       (function() {
         const STORAGE_KEY = 'exam_ai_api_key';
-        // 保存されたキーを取得
         let apiKey = localStorage.getItem(STORAGE_KEY);
-
-        // キーがない場合、入力させる
         if (!apiKey) {
           apiKey = prompt("Google Gemini APIキーを入力してください\n(キーはブラウザ内にのみ保存されます)");
           if (apiKey) {
             localStorage.setItem(STORAGE_KEY, apiKey);
-          } else {
-            alert("APIキーがないため、AI機能は動作しません。");
           }
         }
-        // グローバル変数として公開（JSファイルから読み取るため）
+        // これがないとJS側でキーを読み込めません
         window.GEMINI_API_KEY = apiKey;
       })();
     </script>
