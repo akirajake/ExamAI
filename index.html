@@ -5,21 +5,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>ExamAI Scheduler</title>
 
-    <!-- Tailwind CSS (CDN) -->
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
 
-    <!-- Tailwind Config: JS側で使われているカスタムカラーを定義 -->
+    <!-- Tailwind Config -->
     <script>
       tailwind.config = {
         darkMode: 'class',
         theme: {
           extend: {
             colors: {
-              // アプリ内で使われているカスタムカラー定義
-              primary: '#3b82f6',   // 青 (Blue-500)
-              secondary: '#8b5cf6', // 紫 (Violet-500) - グラデーション用
-              background: '#0f172a', // 背景色 (Slate-900)
-              surface: '#1e293b',    // カード背景 (Slate-800)
+              primary: '#3b82f6',
+              secondary: '#8b5cf6',
+              background: '#0f172a',
+              surface: '#1e293b',
             },
             fontFamily: {
               sans: ['Inter', 'sans-serif'],
@@ -29,92 +28,42 @@
       }
     </script>
 
-    <!-- カスタムCSS: カレンダーのダークモード化とスクロールバー -->
+    <!-- APIキー管理スクリプト (ここを追加しました) -->
+    <script>
+      (function() {
+        const STORAGE_KEY = 'exam_ai_api_key';
+        // 保存されたキーを取得
+        let apiKey = localStorage.getItem(STORAGE_KEY);
+
+        // キーがない場合、入力させる
+        if (!apiKey) {
+          apiKey = prompt("Google Gemini APIキーを入力してください\n(キーはブラウザ内にのみ保存されます)");
+          if (apiKey) {
+            localStorage.setItem(STORAGE_KEY, apiKey);
+          } else {
+            alert("APIキーがないため、AI機能は動作しません。");
+          }
+        }
+        // グローバル変数として公開（JSファイルから読み取るため）
+        window.GEMINI_API_KEY = apiKey;
+      })();
+    </script>
+
+    <!-- Styles -->
     <style>
-      /* 全体の背景と文字色 */
-      body {
-        background-color: #0f172a; /* bg-background */
-        color: #e2e8f0; /* text-slate-200 */
-      }
-
-      /* カスタムスクロールバー */
-      .custom-scrollbar::-webkit-scrollbar {
-        width: 6px;
-        height: 6px;
-      }
-      .custom-scrollbar::-webkit-scrollbar-track {
-        background: transparent;
-      }
-      .custom-scrollbar::-webkit-scrollbar-thumb {
-        background-color: #475569;
-        border-radius: 20px;
-      }
-      .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-        background-color: #64748b;
-      }
-
-      /* React Big Calendar のダークモード補正 */
-      .rbc-calendar {
-        color: #cbd5e1;
-      }
-      .rbc-off-range-bg {
-        background-color: #1e293b !important; /* 暗くする */
-      }
-      .rbc-today {
-        background-color: #1e293b !important;
-      }
-      .rbc-toolbar button {
-        color: #e2e8f0;
-        border-color: #475569;
-      }
-      .rbc-toolbar button:active, .rbc-toolbar button.rbc-active {
-        background-color: #3b82f6;
-        color: white;
-        border-color: #3b82f6;
-      }
-      .rbc-toolbar button:hover {
-        background-color: #334155;
-      }
-      .rbc-header {
-        border-bottom: 1px solid #334155;
-      }
-      .rbc-month-view, .rbc-time-view, .rbc-agenda-view {
-        border: 1px solid #334155;
-      }
-      .rbc-day-bg + .rbc-day-bg,
-      .rbc-month-row + .rbc-month-row {
-        border-color: #334155;
-      }
-      .rbc-time-header-content {
-        border-left: 1px solid #334155;
-      }
-      .rbc-time-content {
-        border-top: 1px solid #334155;
-      }
-      .rbc-timeslot-group {
-        border-bottom: 1px solid #334155;
-      }
-      .rbc-day-slot .rbc-time-slot {
-        border-top: 1px solid #1e293b;
-      }
-      .rbc-time-view-resources .rbc-time-gutter, 
-      .rbc-time-view-resources .rbc-time-header-gutter {
-        border-right: 1px solid #334155;
-      }
-
-      /* グラスモーフィズム (glass-effectクラス用) */
-      .glass-effect {
-        background: rgba(15, 23, 42, 0.7);
-        backdrop-filter: blur(10px);
-        -webkit-backdrop-filter: blur(10px);
-        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-      }
+      body { background-color: #0f172a; color: #e2e8f0; }
+      .custom-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
+      .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+      .custom-scrollbar::-webkit-scrollbar-thumb { background-color: #475569; border-radius: 20px; }
+      .rbc-calendar { color: #cbd5e1; }
+      .rbc-off-range-bg, .rbc-today { background-color: #1e293b !important; }
+      .rbc-toolbar button { color: #e2e8f0; border-color: #475569; }
+      .rbc-toolbar button:active, .rbc-toolbar button.rbc-active { background-color: #3b82f6; color: white; border-color: #3b82f6; }
+      .rbc-header, .rbc-month-view, .rbc-time-view, .rbc-agenda-view, .rbc-timeslot-group, .rbc-time-content, .rbc-time-header-content { border-color: #334155; }
+      .glass-effect { background: rgba(15, 23, 42, 0.7); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border-bottom: 1px solid rgba(255, 255, 255, 0.1); }
     </style>
 
-    <!-- React Big Calendar CSS -->
     <link href="https://cdn.jsdelivr.net/npm/react-big-calendar@1.8.5/lib/css/react-big-calendar.css" rel="stylesheet" />
-
-    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -122,14 +71,12 @@
     <!-- PDF.js -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
     <script>
-      pdfjsLib.GlobalWorkerOptions.workerSrc =
-        'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+      pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
     </script>
 
-    <!-- ★ Vite build JS（相対パス） -->
+    <!-- Vite build JS -->
     <script type="module" crossorigin src="./assets/index-B4GJeJW_.js"></script>
   </head>
-
   <body>
     <div id="root"></div>
   </body>
