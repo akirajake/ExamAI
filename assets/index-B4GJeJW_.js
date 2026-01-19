@@ -406,7 +406,7 @@ ${h}`)}return a},bl=O9(FC);/**
 3. JSON形式で出力する。
 4. 時間は現実的な勉強時間（例: 平日17:00-22:00, 休日09:00-21:00の間など）に割り当てる。
 5. 日本語で出力する。
-`,w7=async(e,t,n)=>{const i=new ZC({apiKey:void 0}),r=`
+`,w7=async(e,t,n)=>{const i=new ZC({apiKey:window.GEMINI_API_KEY}),r=`
     学習開始日: ${t}
     試験日(終了日): ${n}
     
