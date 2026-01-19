@@ -28,19 +28,55 @@
       }
     </script>
 
-    <!-- ★★★ 追加: APIキー管理スクリプト ★★★ -->
+    <!-- ★★★ APIキー管理 & モデル自動取得スクリプト ★★★ -->
     <script>
       (function() {
         const STORAGE_KEY = 'exam_ai_api_key';
         let apiKey = localStorage.getItem(STORAGE_KEY);
+        
         if (!apiKey) {
           apiKey = prompt("Google Gemini APIキーを入力してください\n(キーはブラウザ内にのみ保存されます)");
           if (apiKey) {
             localStorage.setItem(STORAGE_KEY, apiKey);
           }
         }
-        // これがないとJS側でキーを読み込めません
+
+        // JSファイルから読み込めるようにグローバル公開
         window.GEMINI_API_KEY = apiKey;
+        
+        // デフォルトモデル（万が一リスト取得に失敗した場合用）
+        window.DYNAMIC_MODEL_NAME = "models/gemini-1.5-flash";
+
+        // ★ APIサーバーに問い合わせて、確実に使えるモデル名を取得する
+        if (apiKey) {
+          console.log("Fetching available models...");
+          fetch(`https://generativelanguage.googleapis.com/v1beta/models?key=${apiKey}`)
+            .then(res => res.json())
+            .then(data => {
+              if (data.models) {
+                // generateContentに対応し、かつ名前が 'gemini' を含む最新のモデルを探す
+                const validModel = data.models.find(m => 
+                  m.supportedGenerationMethods && 
+                  m.supportedGenerationMethods.includes("generateContent") &&
+                  m.name.includes("gemini")
+                );
+                
+                if (validModel) {
+                  // 正式名称（例: models/gemini-1.5-flash-001）をセット
+                  window.DYNAMIC_MODEL_NAME = validModel.name;
+                  console.log("✅ Auto-selected model:", window.DYNAMIC_MODEL_NAME);
+                } else {
+                  console.warn("⚠️ Valid Gemini model not found in list, using default.");
+                }
+              } else if (data.error) {
+                console.error("❌ Model list error:", data.error);
+                if (data.error.code === 400) {
+                    alert("APIキーが無効です。localStorage.clear() を実行して再設定してください。");
+                }
+              }
+            })
+            .catch(e => console.error("❌ Network error fetching models:", e));
+        }
       })();
     </script>
 
